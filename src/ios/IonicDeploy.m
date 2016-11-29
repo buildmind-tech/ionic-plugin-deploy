@@ -251,7 +251,8 @@ static NSOperationQueue *delegateQueue;
 
 - (void) download:(CDVInvokedUrlCommand *)command {
     self.appId = [command.arguments objectAtIndex:0];
-
+    self.download_url = [command.arguments objectAtIndex:1];
+    
     dispatch_async(self.serialQueue, ^{
         // Save this to a property so we can have the download progress delegate thing send
         // progress update callbacks
@@ -270,13 +271,12 @@ static NSOperationQueue *delegateQueue;
             [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"true"] callbackId:self.callbackId];
         } else {
             NSDictionary *result = self.last_update;
-            NSString *download_url = [result objectForKey:@"url"];
-
-            NSLog(@"download url is: %@", download_url);
+            //NSString *download_url = [result objectForKey:@"url"];
+            NSLog(@"download url is: %@", self.download_url);
 
             self.downloadManager = [[DownloadManager alloc] initWithDelegate:self];
 
-            NSURL *url = [NSURL URLWithString:download_url];
+            NSURL *url = [NSURL URLWithString:self.download_url];
 
             NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
             NSString *libraryDirectory = [paths objectAtIndex:0];
