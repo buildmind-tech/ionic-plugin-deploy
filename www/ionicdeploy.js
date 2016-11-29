@@ -17,13 +17,13 @@ var IonicDeploy = {
       [app_id, channel_tag]
     );
   },
-  download: function(app_id, success, failure) {
+  download: function(app_id, url, success, failure) {
   	cordova.exec(
   		success,
   		failure,
   		'IonicDeploy',
   		'download',
-  		[app_id]
+  		[app_id,url]
   	);
   },
   extract: function(app_id, success,failure) {
