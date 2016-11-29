@@ -205,9 +205,10 @@ public class IonicDeploy extends CordovaPlugin {
       return true;
     } else if (action.equals("download")) {
       logMessage("DOWNLOAD", "Downloading updates");
+      final String download_url = args.getString(1);
       cordova.getThreadPool().execute(new Runnable() {
         public void run() {
-          downloadUpdate(callbackContext);
+          downloadUpdate(callbackContext,download_url);
         }
       });
       return true;
@@ -402,7 +403,7 @@ public class IonicDeploy extends CordovaPlugin {
     }
   }
 
-  private void downloadUpdate(CallbackContext callbackContext) {
+  private void downloadUpdate(CallbackContext callbackContext,String download_url) {
     String upstream_uuid = this.prefs.getString("upstream_uuid", "");
     if (upstream_uuid != "" && this.hasVersion(upstream_uuid)) {
       // Set the current version to the upstream uuid
@@ -410,9 +411,9 @@ public class IonicDeploy extends CordovaPlugin {
       callbackContext.success("true");
     } else {
       try {
-          String url = this.last_update.getString("url");
+          //String url = this.last_update.getString("url");
           final DownloadTask downloadTask = new DownloadTask(this.myContext, callbackContext);
-          downloadTask.execute(url);
+          downloadTask.execute(download_url);
       } catch (JSONException e) {
         logMessage("DOWNLOAD", e.toString());
         callbackContext.error("Error fetching download");
